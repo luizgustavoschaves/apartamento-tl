@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apartamento TL</title>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -15,6 +16,7 @@
     }
     body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--neutral); color: var(--text); min-height: 100vh; }
 
+    /* ── Header ── */
     .app-header { background: var(--primary); color: #fff; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; height: 56px; box-shadow: 0 2px 8px rgba(0,0,0,0.18); position: sticky; top: 0; z-index: 100; }
     .app-header h1 { font-size: 1.2rem; font-weight: 700; }
     .header-right { display: flex; align-items: center; gap: 12px; }
@@ -26,6 +28,7 @@
     .sync-dot.error  { background: var(--warn); }
     @keyframes pulse { to { opacity: .4; } }
 
+    /* ── Tabs ── */
     .tab-bar { background: var(--white); border-bottom: 2px solid var(--border); display: flex; padding: 0 24px; gap: 4px; overflow-x: auto; }
     .tab-btn { padding: 14px 20px; border: none; background: none; cursor: pointer; font-size: .9rem; font-weight: 500; color: var(--muted); border-bottom: 3px solid transparent; margin-bottom: -2px; white-space: nowrap; transition: color .2s, border-color .2s; display: flex; align-items: center; gap: 7px; }
     .tab-btn:hover { color: var(--primary-light); }
@@ -35,6 +38,7 @@
     .tab-content { display: none; padding: 24px; max-width: 1100px; margin: 0 auto; }
     .tab-content.active { display: block; }
 
+    /* ── Cards ── */
     .cards-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
     .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px 20px; border-left: 4px solid var(--primary-light); }
     .card.positive { border-left-color: var(--accent); }
@@ -43,12 +47,14 @@
     .card .value { font-size: 1.6rem; font-weight: 700; color: var(--primary); margin-top: 4px; line-height: 1.2; }
     .card .sub   { font-size: .78rem; color: var(--muted); margin-top: 2px; }
 
+    /* ── Toolbar ── */
     .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
     .section-title { font-size: 1rem; font-weight: 700; color: var(--primary); }
     .toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
     select { border: 1.5px solid var(--border); border-radius: 6px; padding: 6px 12px; font-size: .86rem; color: var(--text); background: var(--white); outline: none; }
     select:focus { border-color: var(--primary-light); }
 
+    /* ── Buttons ── */
     .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 6px; border: none; font-size: .86rem; font-weight: 600; cursor: pointer; transition: opacity .15s; }
     .btn:hover { opacity: .85; }
     .btn-primary { background: var(--primary); color: #fff; }
@@ -57,6 +63,7 @@
     .btn-sm { padding: 4px 10px; font-size: .78rem; }
     .btn-icon { padding: 5px 8px; }
 
+    /* ── Ponto Table ── */
     .table-wrap { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: auto; }
     table { width: 100%; border-collapse: collapse; font-size: .86rem; }
     thead th { background: var(--primary); color: #fff; padding: 11px 14px; text-align: center; font-weight: 600; font-size: .78rem; white-space: nowrap; }
@@ -80,8 +87,8 @@
     .save-status { font-size: .8rem; color: var(--accent); font-weight: 600; opacity: 0; transition: opacity .4s; }
     .save-status.show { opacity: 1; }
 
-    /* Compras */
-    .compras-views { display: flex; gap: 10px; margin-bottom: 20px; }
+    /* ── Compras ── */
+    .sub-views { display: flex; gap: 10px; margin-bottom: 20px; }
     .view-btn { padding: 8px 20px; border-radius: 20px; border: 2px solid var(--border); background: var(--white); font-size: .88rem; font-weight: 600; cursor: pointer; color: var(--muted); transition: all .2s; }
     .view-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
     .add-item-bar { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 20px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
@@ -113,13 +120,65 @@
     .progress-label { font-size: .88rem; font-weight: 700; color: var(--primary); white-space: nowrap; }
     .empty-cat { padding: 14px 18px; color: var(--muted); font-size: .85rem; font-style: italic; }
 
-    /* Coming soon */
+    /* ── Limpeza ── */
+    .lim-layout { display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: start; }
+    @media (max-width: 800px) { .lim-layout { grid-template-columns: 1fr; } }
+
+    .lim-panel { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .lim-panel-header { background: var(--primary); color: #fff; padding: 12px 16px; font-size: .9rem; font-weight: 700; display: flex; align-items: center; justify-content: space-between; }
+
+    .add-comodo-bar { display: flex; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+    .add-comodo-bar input { flex: 1; border: 1.5px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: .86rem; font-family: inherit; }
+    .add-comodo-bar input:focus { border-color: var(--primary-light); outline: none; }
+
+    .comodo-block { border-bottom: 1px solid var(--border); }
+    .comodo-block:last-child { border-bottom: none; }
+    .comodo-row { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--neutral); cursor: pointer; transition: background .15s; }
+    .comodo-row:hover { background: #E8EFF5; }
+    .comodo-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    .comodo-nome { flex: 1; font-size: .9rem; font-weight: 600; color: var(--text); }
+    .comodo-chevron { font-size: .7rem; color: var(--muted); transition: transform .2s; }
+    .comodo-chevron.open { transform: rotate(90deg); }
+    .comodo-actions { display: flex; gap: 4px; }
+    .comodo-btn { background: none; border: none; cursor: pointer; font-size: .85rem; color: var(--muted); padding: 2px 5px; border-radius: 4px; }
+    .comodo-btn:hover { color: var(--primary); }
+
+    .atividades-list { padding: 8px 12px; background: var(--white); }
+    .add-atv-bar { display: flex; gap: 6px; padding: 6px 0 8px; flex-wrap: wrap; }
+    .add-atv-bar input { flex: 1; min-width: 100px; border: 1.5px solid var(--border); border-radius: 6px; padding: 5px 8px; font-size: .82rem; font-family: inherit; }
+    .add-atv-bar input:focus { border-color: var(--primary-light); outline: none; }
+    .add-atv-bar select { border: 1.5px solid var(--border); border-radius: 6px; padding: 5px 8px; font-size: .8rem; background: var(--white); }
+
+    .atv-row { display: flex; align-items: center; gap: 6px; padding: 6px 4px; border-bottom: 1px solid #f0f0f0; }
+    .atv-row:last-child { border-bottom: none; }
+    .atv-nome { flex: 1; font-size: .85rem; }
+    .atv-freq { font-size: .72rem; background: var(--border); color: var(--muted); padding: 2px 7px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+    .atv-btn { background: none; border: none; cursor: pointer; font-size: .8rem; color: var(--muted); padding: 2px 4px; border-radius: 3px; }
+    .atv-btn:hover.edit { color: var(--primary-light); }
+    .atv-btn:hover.del  { color: var(--warn); }
+
+    .lim-cal-wrap { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; }
+    .cal-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: .8rem; color: var(--text); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .cal-hint { font-size: .75rem; color: var(--muted); margin-bottom: 10px; }
+
+    /* FullCalendar overrides */
+    .fc .fc-toolbar-title { font-size: 1rem !important; font-weight: 700; color: var(--primary); }
+    .fc .fc-button { background: var(--primary) !important; border-color: var(--primary) !important; font-size: .8rem !important; }
+    .fc .fc-button:hover { opacity: .85; }
+    .fc .fc-button-active { background: var(--primary-light) !important; border-color: var(--primary-light) !important; }
+    .fc .fc-daygrid-event { border-radius: 4px !important; font-size: .75rem !important; cursor: grab; }
+    .fc .fc-event.done-event { opacity: .45; text-decoration: line-through; }
+    .fc-event-title { font-weight: 600; }
+
+    /* ── Coming soon ── */
     .coming-soon { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; text-align: center; }
     .coming-soon .icon { font-size: 3rem; margin-bottom: 16px; }
     .coming-soon h2 { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
     .coming-soon p { color: var(--muted); margin-top: 8px; max-width: 360px; }
 
-    /* Modal */
+    /* ── Modal ── */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; align-items: center; justify-content: center; }
     .modal-overlay.open { display: flex; }
     .modal { background: var(--white); border-radius: 14px; padding: 28px; width: 420px; max-width: 95vw; box-shadow: 0 8px 32px rgba(0,0,0,.22); }
@@ -131,7 +190,7 @@
     .form-group input:focus { border-color: var(--primary-light); outline: none; }
     .modal-btns { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
 
-    /* Loading */
+    /* ── Loading ── */
     .loading-overlay { position: fixed; inset: 0; background: rgba(255,255,255,.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 300; gap: 14px; color: var(--primary); font-weight: 600; }
     .spinner { width: 36px; height: 36px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -163,13 +222,13 @@
 
 <nav class="tab-bar">
   <button class="tab-btn active" onclick="switchTab('ponto', this)">👩‍💼 Controle de Ponto</button>
-  <button class="tab-btn" onclick="switchTab('limpeza', this)">🧹 Limpeza <span class="tag-coming">Em breve</span></button>
+  <button class="tab-btn" onclick="switchTab('limpeza', this)">🧹 Limpeza</button>
   <button class="tab-btn" onclick="switchTab('alimentacao', this)">🍽️ Alimentação <span class="tag-coming">Em breve</span></button>
   <button class="tab-btn" onclick="switchTab('compras', this)">🛒 Compras</button>
   <button class="tab-btn" onclick="switchTab('outros', this)">📋 Outros <span class="tag-coming">Em breve</span></button>
 </nav>
 
-<!-- ── PONTO ── -->
+<!-- ══════════════ PONTO ══════════════ -->
 <div class="tab-content active" id="tab-ponto">
   <div class="cards-row">
     <div class="card" id="cardBancoWrap">
@@ -217,9 +276,37 @@
   </div>
 </div>
 
-<!-- ── COMPRAS ── -->
+<!-- ══════════════ LIMPEZA ══════════════ -->
+<div class="tab-content" id="tab-limpeza">
+  <div class="lim-layout">
+
+    <!-- Left: Rooms panel -->
+    <div class="lim-panel">
+      <div class="lim-panel-header">
+        🏠 Cômodos e Atividades
+      </div>
+      <div class="add-comodo-bar">
+        <input type="text" id="novoComodo" placeholder="Nome do cômodo…" onkeydown="if(event.key==='Enter')addComodo()" />
+        <button class="btn btn-primary btn-sm" onclick="addComodo()">+</button>
+      </div>
+      <div id="comodosList"></div>
+    </div>
+
+    <!-- Right: Calendar -->
+    <div>
+      <div class="lim-cal-wrap">
+        <div class="cal-legend" id="calLegend"></div>
+        <p class="cal-hint">💡 Arraste para remarcar · Clique para marcar como feito</p>
+        <div id="limCalendar"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════ COMPRAS ══════════════ -->
 <div class="tab-content" id="tab-compras">
-  <div class="compras-views">
+  <div class="sub-views">
     <button class="view-btn active" id="btnListaGeral" onclick="switchComprasView('geral')">📋 Lista Geral</button>
     <button class="view-btn" id="btnListaCompras" onclick="switchComprasView('compras')">
       🛒 Lista de Compras
@@ -259,10 +346,7 @@
   </div>
 </div>
 
-<!-- ── OTHER TABS ── -->
-<div class="tab-content" id="tab-limpeza">
-  <div class="coming-soon"><div class="icon">🧹</div><h2>Rotina de Limpeza</h2><p>Em breve você poderá gerenciar a rotina de limpeza aqui.</p></div>
-</div>
+<!-- ══════════════ OTHER TABS ══════════════ -->
 <div class="tab-content" id="tab-alimentacao">
   <div class="coming-soon"><div class="icon">🍽️</div><h2>Alimentação</h2><p>Cardápios, planos alimentares e controle de estoque.</p></div>
 </div>
@@ -270,7 +354,7 @@
   <div class="coming-soon"><div class="icon">📋</div><h2>Outros</h2><p>Espaço para outras áreas da casa.</p></div>
 </div>
 
-<!-- ── MODAL ── -->
+<!-- ══════════════ MODAL PONTO ══════════════ -->
 <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <h2>Lançar Horário</h2>
@@ -291,14 +375,45 @@
   </div>
 </div>
 
+<!-- ══════════════ MODAL EDITAR ATIVIDADE ══════════════ -->
+<div class="modal-overlay" id="modalAtvOverlay" onclick="if(event.target===this)closeModalAtv()">
+  <div class="modal">
+    <h2>Editar Atividade</h2>
+    <input type="hidden" id="editAtvId" />
+    <div class="form-row">
+      <div class="form-group" style="flex:2"><label>Nome</label><input type="text" id="editAtvNome" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Frequência</label>
+        <select id="editAtvFreq" style="border:1.5px solid var(--border);border-radius:6px;padding:8px 12px;font-size:.9rem;">
+          <option value="diaria">Diária</option>
+          <option value="semanal">Semanal</option>
+          <option value="quinzenal">Quinzenal</option>
+          <option value="mensal">Mensal</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeModalAtv()">Cancelar</button>
+      <button class="btn btn-success" onclick="saveEditAtv()">Salvar</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 <script>
-// ── Supabase ──
+// ══════════════════════════════════════════
+// SUPABASE
+// ══════════════════════════════════════════
 const SUPA_URL = 'https://pnjmqbsclyshmsaenime.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBuam1xYnNjbHlzaG1zYWVuaW1lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MDE1NzUsImV4cCI6MjA5MTA3NzU3NX0.D8YBlaE9xfdWaE2liUiEgbtZYw-Sekv_L5TCFk6CGM0';
 const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
 
-// ── Config ──
+// ══════════════════════════════════════════
+// CONSTANTS
+// ══════════════════════════════════════════
 const START_DATE = '2026-04-01';
 const DAILY_MINS = 480;
 const DAY_NAMES  = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
@@ -310,340 +425,359 @@ const CATEGORIAS = [
   { key: 'limpeza',    label: '🧴 Limpeza' },
   { key: 'muniz',      label: '🏪 Muniz' },
 ];
+const ROOM_COLORS = ['#2E75B6','#27AE60','#E67E22','#8E44AD','#E74C3C','#16A085','#F39C12','#795548'];
+const FREQ_LABELS = { diaria:'Diária', semanal:'Semanal', quinzenal:'Quinzenal', mensal:'Mensal' };
 
-// ── State ──
-let pontoData  = {};
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let pontoData   = {};
 let comprasData = [];
+let comodos     = [];
+let atividades  = [];
+let registros   = [];
+let limCalendar = null;
 let saveTimers  = {};
+let expandedComodos = new Set();
 
-// ── Helpers ──
-const parseTime = s => { if (!s) return null; const [h,m] = s.split(':').map(Number); return isNaN(h)?null:h*60+m; };
-const minsToHM  = (n, sign=false) => {
-  if (n===null||n===undefined) return '—';
-  const s = n<0?'-':(sign&&n>0?'+':'');
-  const a = Math.abs(n);
-  return `${s}${Math.floor(a/60)}:${String(a%60).padStart(2,'0')}`;
-};
-const diffBadge = n => {
-  if (n===null) return '<span style="color:var(--muted)">—</span>';
-  if (n>0) return `<span class="badge badge-plus">${minsToHM(n,true)}</span>`;
-  if (n<0) return `<span class="badge badge-minus">${minsToHM(n,true)}</span>`;
-  return `<span class="badge badge-zero">0:00</span>`;
-};
-const bancoBadge = n => {
-  if (n===null) return '<span style="color:var(--muted)">—</span>';
-  const c = n>0?'#1E8449':n<0?'#C0392B':'#2471A3';
-  return `<span style="color:${c};font-weight:700">${minsToHM(n,true)}</span>`;
-};
-const fmtDate = s => { const [y,m,d]=s.split('-'); return `${d}/${m}/${y}`; };
-const dayName = s => DAY_NAMES[new Date(s+'T12:00:00').getDay()];
+// ══════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════
+const parseTime = s => { if(!s)return null; const[h,m]=s.split(':').map(Number); return isNaN(h)?null:h*60+m; };
+const minsToHM  = (n,sign=false) => { if(n===null||n===undefined)return'—'; const s=n<0?'-':(sign&&n>0?'+':''); const a=Math.abs(n); return`${s}${Math.floor(a/60)}:${String(a%60).padStart(2,'0')}`; };
+const diffBadge = n => { if(n===null)return'<span style="color:var(--muted)">—</span>'; if(n>0)return`<span class="badge badge-plus">${minsToHM(n,true)}</span>`; if(n<0)return`<span class="badge badge-minus">${minsToHM(n,true)}</span>`; return'<span class="badge badge-zero">0:00</span>'; };
+const bancoBadge= n => { if(n===null)return'<span style="color:var(--muted)">—</span>'; const c=n>0?'#1E8449':n<0?'#C0392B':'#2471A3'; return`<span style="color:${c};font-weight:700">${minsToHM(n,true)}</span>`; };
+const fmtDate   = s => { const[y,m,d]=s.split('-'); return`${d}/${m}/${y}`; };
+const dayName   = s => DAY_NAMES[new Date(s+'T12:00:00').getDay()];
+const today     = () => new Date().toISOString().slice(0,10);
 
-function genWeekdays(start, end) {
-  const days=[]; let d=new Date(start+'T12:00:00'); const e=new Date(end+'T12:00:00');
-  while(d<=e){const w=d.getDay();if(w>=1&&w<=5)days.push(d.toISOString().slice(0,10));d.setDate(d.getDate()+1);}
-  return days;
-}
-function buildBancoMap(all) {
-  let b=0; const map={};
-  all.forEach(d=>{const r=pontoData[d];if(r?.entrada&&r?.saida)b+=parseTime(r.saida)-parseTime(r.entrada)-DAILY_MINS;map[d]=b;});
-  return map;
+function genWeekdays(start,end){const days=[];let d=new Date(start+'T12:00:00');const e=new Date(end+'T12:00:00');while(d<=e){const w=d.getDay();if(w>=1&&w<=5)days.push(d.toISOString().slice(0,10));d.setDate(d.getDate()+1);}return days;}
+function buildBancoMap(all){let b=0;const map={};all.forEach(d=>{const r=pontoData[d];if(r?.entrada&&r?.saida)b+=parseTime(r.saida)-parseTime(r.entrada)-DAILY_MINS;map[d]=b;});return map;}
+
+function setSyncState(s){const dot=document.getElementById('syncDot'),lbl=document.getElementById('syncLabel');dot.className='sync-dot'+(s==='ok'?' ok':s==='saving'?' saving':s==='error'?' error':'');lbl.textContent=s==='ok'?'Sincronizado':s==='saving'?'Salvando…':s==='error'?'Erro de conexão':'Conectando…';}
+function flashSaved(){const el=document.getElementById('saveStatus');el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2000);}
+
+// ══════════════════════════════════════════
+// PONTO
+// ══════════════════════════════════════════
+async function loadPonto(){
+  try{const{data,error}=await supa.from('ponto').select('*');if(error)throw error;pontoData={};(data||[]).forEach(r=>{pontoData[r.date]={entrada:r.entrada||'',saida:r.saida||'',obs:r.obs||''};});setSyncState('ok');renderTable();}
+  catch(e){setSyncState('error');console.error('Erro ponto:',e);}
+  finally{document.getElementById('loadingOverlay').style.display='none';}
 }
 
-// ── Sync indicator ──
-function setSyncState(s) {
-  const dot=document.getElementById('syncDot'), lbl=document.getElementById('syncLabel');
-  dot.className='sync-dot'+(s==='ok'?' ok':s==='saving'?' saving':s==='error'?' error':'');
-  lbl.textContent=s==='ok'?'Sincronizado':s==='saving'?'Salvando…':s==='error'?'Erro de conexão':'Conectando…';
-}
-function flashSaved() {
-  const el=document.getElementById('saveStatus');
-  el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),2000);
-}
+function setupRealtimePonto(){supa.channel('ponto-rt').on('postgres_changes',{event:'*',schema:'public',table:'ponto'},payload=>{if(payload.eventType==='DELETE')delete pontoData[payload.old.date];else{const r=payload.new;pontoData[r.date]={entrada:r.entrada||'',saida:r.saida||'',obs:r.obs||''};}renderTable();}).subscribe();}
 
-// ════════ PONTO ════════
+function onInput(dateStr,field,value){if(!pontoData[dateStr])pontoData[dateStr]={entrada:'',saida:'',obs:''};pontoData[dateStr][field]=value;refreshRowCalcs();clearTimeout(saveTimers[dateStr]);saveTimers[dateStr]=setTimeout(async()=>{setSyncState('saving');const r=pontoData[dateStr];const{error}=await supa.from('ponto').upsert({date:dateStr,entrada:r?.entrada||null,saida:r?.saida||null,obs:r?.obs||null});if(error){setSyncState('error');return;}setSyncState('ok');flashSaved();},800);}
 
-async function loadPonto() {
+function refreshRowCalcs(){const all=genWeekdays(START_DATE,`${new Date().getFullYear()}-12-31`);const bancoMap=buildBancoMap(all);const filter=document.getElementById('filterMonth').value;const visible=filter==='all'?all:all.filter(d=>d.startsWith(filter));visible.forEach(d=>{const r=pontoData[d]||{};const wEl=document.getElementById(`w-${d}`),dEl=document.getElementById(`d-${d}`),bEl=document.getElementById(`b-${d}`);if(!wEl)return;if(r.entrada&&r.saida){const w=parseTime(r.saida)-parseTime(r.entrada);wEl.textContent=minsToHM(w);dEl.innerHTML=diffBadge(w-DAILY_MINS);bEl.innerHTML=bancoBadge(bancoMap[d]);}else{wEl.textContent='—';dEl.innerHTML=diffBadge(null);bEl.innerHTML=bancoBadge(null);}});updateCards(all,bancoMap);}
+
+function renderTable(){const t=today();const all=genWeekdays(START_DATE,`${new Date().getFullYear()}-12-31`);const bancoMap=buildBancoMap(all);const filter=document.getElementById('filterMonth').value||t.slice(0,7);const rows=filter==='all'?all:all.filter(d=>d.startsWith(filter));document.getElementById('pontoBody').innerHTML=rows.map(d=>{const r=pontoData[d]||{},isToday=d===t,isFuture=d>t;const w=(r.entrada&&r.saida)?parseTime(r.saida)-parseTime(r.entrada):null;const tCell=(f,v)=>isFuture?`<span style="color:var(--muted);font-size:.8rem">—</span>`:`<input class="time-input" type="time" value="${v}" oninput="onInput('${d}','${f}',this.value)">`;const oCell=isFuture?`<span style="color:var(--muted);font-size:.8rem">—</span>`:`<input class="obs-input" type="text" value="${r.obs||''}" placeholder="—" oninput="onInput('${d}','obs',this.value)">`;return`<tr class="${isToday?'today-row':''}" id="row-${d}"><td><strong>${fmtDate(d)}</strong>${isToday?' 📍':''}</td><td>${dayName(d)}</td><td>${tCell('entrada',r.entrada||'')}</td><td>${tCell('saida',r.saida||'')}</td><td id="w-${d}">${w!==null?minsToHM(w):'—'}</td><td id="d-${d}">${diffBadge(w!==null?w-DAILY_MINS:null)}</td><td id="b-${d}">${bancoBadge(r.entrada&&r.saida?bancoMap[d]:null)}</td><td>${oCell}</td><td>${!isFuture?`<button class="btn btn-icon btn-outline" onclick="markAbsence('${d}')" title="Ausência">🚫</button>`:''}</td></tr>`;}).join('');updateCards(all,bancoMap);if(rows.includes(t))setTimeout(()=>document.getElementById('row-'+t)?.scrollIntoView({behavior:'smooth',block:'center'}),100);}
+
+function updateCards(all,bancoMap){const t=today(),curMonth=t.slice(0,7),thisMo=all.filter(d=>d.startsWith(curMonth));let dias=0,horas=0;thisMo.forEach(d=>{const r=pontoData[d];if(r?.entrada&&r?.saida){dias++;horas+=parseTime(r.saida)-parseTime(r.entrada);}});const totalBanco=bancoMap[all[all.length-1]]??0;document.getElementById('cardBanco').textContent=minsToHM(totalBanco,true);document.getElementById('cardBancoWrap').className=`card ${totalBanco>0?'positive':totalBanco<0?'negative':''}`;document.getElementById('cardDias').textContent=`${dias}/${thisMo.length}`;document.getElementById('cardHoras').textContent=minsToHM(horas);}
+
+async function markAbsence(d){const obs=prompt(`Motivo da ausência em ${fmtDate(d)}:`,'Falta');if(obs===null)return;pontoData[d]={entrada:'',saida:'',obs:obs||'Falta'};setSyncState('saving');await supa.from('ponto').upsert({date:d,entrada:null,saida:null,obs:obs||'Falta'});setSyncState('ok');flashSaved();renderTable();}
+
+function openModal(){document.getElementById('modalDate').value=today();document.getElementById('modalEntrada').value='07:00';document.getElementById('modalSaida').value='15:00';document.getElementById('modalObs').value='';document.getElementById('modalOverlay').classList.add('open');}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');}
+async function saveModal(){const d=document.getElementById('modalDate').value,ent=document.getElementById('modalEntrada').value,sai=document.getElementById('modalSaida').value,obs=document.getElementById('modalObs').value;if(!d){alert('Selecione uma data.');return;}pontoData[d]={entrada:ent,saida:sai,obs};setSyncState('saving');await supa.from('ponto').upsert({date:d,entrada:ent||null,saida:sai||null,obs:obs||null});setSyncState('ok');flashSaved();closeModal();renderTable();}
+
+function exportCSV(){const all=genWeekdays(START_DATE,`${new Date().getFullYear()}-12-31`);let csv='Data,Dia,Entrada,Saída,Horas Trabalhadas,Diferença,Observações\n';all.forEach(d=>{const r=pontoData[d]||{};let w='',df='';if(r.entrada&&r.saida){const n=parseTime(r.saida)-parseTime(r.entrada);w=minsToHM(n);df=minsToHM(n-DAILY_MINS,true);}csv+=`${fmtDate(d)},${dayName(d)},${r.entrada||''},${r.saida||''},${w},${df},"${r.obs||''}"\n`;});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));a.download='ponto-alcyone.csv';a.click();}
+
+function populateMonthFilter(){const sel=document.getElementById('filterMonth'),t=today(),yr=parseInt(START_DATE.slice(0,4));sel.innerHTML='<option value="all">Todos os meses</option>';for(let m=3;m<=11;m++){const key=`${yr}-${String(m+1).padStart(2,'0')}`;const opt=document.createElement('option');opt.value=key;opt.textContent=`${MONTH_LONG[m]}/${yr}`;if(key===t.slice(0,7))opt.selected=true;sel.appendChild(opt);}}
+
+// ══════════════════════════════════════════
+// COMPRAS
+// ══════════════════════════════════════════
+async function loadCompras(){try{const{data,error}=await supa.from('compras').select('*').order('categoria').order('nome');if(error)throw error;comprasData=data||[];renderCompras();}catch(e){console.error('Erro compras:',e);}}
+function setupRealtimeCompras(){supa.channel('compras-rt').on('postgres_changes',{event:'*',schema:'public',table:'compras'},()=>loadCompras()).subscribe();}
+
+async function addItem(){const nome=document.getElementById('novoItem').value.trim(),cat=document.getElementById('novaCategoria').value;if(!nome){document.getElementById('novoItem').focus();return;}await supa.from('compras').insert({nome,categoria:cat,status:'lista_geral'});document.getElementById('novoItem').value='';document.getElementById('novoItem').focus();loadCompras();}
+async function deleteItem(id){if(!confirm('Remover item?'))return;await supa.from('compras').delete().eq('id',id);loadCompras();}
+async function moverParaCompras(){const ids=[...document.querySelectorAll('.geral-cb:checked')].map(el=>parseInt(el.dataset.id));if(!ids.length)return;await supa.from('compras').update({status:'lista_compras'}).in('id',ids);loadCompras();switchComprasView('compras');}
+async function toggleComprado(id,comprado){await supa.from('compras').update({status:comprado?'lista_geral':'lista_compras_comprado'}).eq('id',id);loadCompras();}
+async function limparComprados(){const ids=comprasData.filter(i=>i.status==='lista_compras_comprado').map(i=>i.id);if(!ids.length)return;await supa.from('compras').update({status:'lista_geral'}).in('id',ids);loadCompras();}
+
+function switchComprasView(view){document.getElementById('viewGeral').style.display=view==='geral'?'block':'none';document.getElementById('viewCompras').style.display=view==='compras'?'block':'none';document.getElementById('btnListaGeral').classList.toggle('active',view==='geral');document.getElementById('btnListaCompras').classList.toggle('active',view==='compras');}
+
+function renderCompras(){renderGeralLists();renderComprasLists();updateCartBadge();}
+
+function renderGeralLists(){const items=comprasData.filter(i=>i.status==='lista_geral');const container=document.getElementById('geralLists');container.innerHTML='';CATEGORIAS.forEach(cat=>{const catItems=items.filter(i=>i.categoria===cat.key);const sec=document.createElement('div');sec.className='cat-section';sec.innerHTML=`<div class="cat-header"><span class="cat-title">${cat.label}</span><span class="cat-count">${catItems.length} ${catItems.length===1?'item':'itens'}</span></div>`+(catItems.length===0?'<div class="empty-cat">Nenhum item nesta categoria</div>':catItems.map(item=>`<div class="item-row" id="item-row-${item.id}"><input type="checkbox" class="item-cb geral-cb" data-id="${item.id}" onchange="updateSelCount()"><span class="item-name">${item.nome}</span><button class="item-edit" onclick="startEdit(${item.id},'${item.nome.replace(/'/g,"\\'")}')">✏️</button><button class="item-del" onclick="deleteItem(${item.id})">✕</button></div>`).join(''));container.appendChild(sec);});updateSelCount();}
+
+function renderComprasLists(){const cartItems=comprasData.filter(i=>i.status==='lista_compras'||i.status==='lista_compras_comprado');const purchased=cartItems.filter(i=>i.status==='lista_compras_comprado');const container=document.getElementById('comprasLists');container.innerHTML='';if(!cartItems.length){container.innerHTML='<div class="cat-section"><div class="empty-cat" style="padding:24px;text-align:center">Nenhum item na lista. Volte à Lista Geral e selecione os produtos! 🛒</div></div>';document.getElementById('cartProgressLabel').textContent='0 / 0 itens';document.getElementById('cartProgressBar').style.width='0%';document.getElementById('btnLimparComprados').style.display='none';return;}const pct=Math.round((purchased.length/cartItems.length)*100);document.getElementById('cartProgressBar').style.width=pct+'%';document.getElementById('cartProgressLabel').textContent=`${purchased.length} / ${cartItems.length} itens`;document.getElementById('btnLimparComprados').style.display=purchased.length>0?'':'none';CATEGORIAS.forEach(cat=>{const catItems=cartItems.filter(i=>i.categoria===cat.key);if(!catItems.length)return;const sec=document.createElement('div');sec.className='cat-section';const pend=catItems.filter(i=>i.status==='lista_compras').length;sec.innerHTML=`<div class="cat-header"><span class="cat-title">${cat.label}</span><span class="cat-count">${pend} restante${pend!==1?'s':''}</span></div>`+catItems.map(item=>{const c=item.status==='lista_compras_comprado';return`<div class="item-row ${c?'purchased':''}"><input type="checkbox" class="item-cb" ${c?'checked':''} onchange="toggleComprado(${item.id},${c})"><span class="item-name">${item.nome}</span></div>`;}).join('');container.appendChild(sec);});}
+
+function startEdit(id,nomeAtual){const row=document.getElementById(`item-row-${id}`);if(!row)return;row.innerHTML=`<input class="item-edit-input" id="edit-input-${id}" type="text" value="${nomeAtual}" onkeydown="if(event.key==='Enter')saveEditItem(${id});if(event.key==='Escape')renderCompras();"><button class="btn btn-success btn-sm" onclick="saveEditItem(${id})">✓</button><button class="btn btn-outline btn-sm" onclick="renderCompras()">✕</button>`;document.getElementById(`edit-input-${id}`)?.focus();}
+async function saveEditItem(id){const novoNome=document.getElementById(`edit-input-${id}`)?.value.trim();if(!novoNome)return;await supa.from('compras').update({nome:novoNome}).eq('id',id);loadCompras();}
+
+function updateSelCount(){const n=document.querySelectorAll('.geral-cb:checked').length;document.getElementById('selCount').innerHTML=n>0?`<strong>${n}</strong> item${n!==1?'s':''} selecionado${n!==1?'s':''}`:'Nenhum item selecionado';document.getElementById('btnMontar').style.display=n>0?'':'none';}
+function updateCartBadge(){const n=comprasData.filter(i=>i.status==='lista_compras'||i.status==='lista_compras_comprado').length;const b=document.getElementById('cartBadge');b.style.display=n>0?'':'none';b.textContent=n;}
+
+// ══════════════════════════════════════════
+// LIMPEZA
+// ══════════════════════════════════════════
+async function loadLimpeza(){
   try {
-    const {data,error}=await supa.from('ponto').select('*');
-    if(error) throw error;
-    pontoData={};
-    (data||[]).forEach(r=>{pontoData[r.date]={entrada:r.entrada||'',saida:r.saida||'',obs:r.obs||''};});
-    setSyncState('ok');
-    renderTable();
-  } catch(e) {
-    setSyncState('error');
-    console.error('Erro ponto:',e);
-  } finally {
-    document.getElementById('loadingOverlay').style.display='none';
-  }
+    const [rc, ra, rr] = await Promise.all([
+      supa.from('limpeza_comodos').select('*').order('id'),
+      supa.from('limpeza_atividades').select('*').order('id'),
+      supa.from('limpeza_registros').select('*')
+    ]);
+    comodos    = rc.data || [];
+    atividades = ra.data || [];
+    registros  = rr.data || [];
+    renderComodos();
+    refreshCalendar();
+  } catch(e) { console.error('Erro limpeza:', e); }
 }
 
-function setupRealtimePonto() {
-  supa.channel('ponto-rt').on('postgres_changes',{event:'*',schema:'public',table:'ponto'},payload=>{
-    if(payload.eventType==='DELETE') delete pontoData[payload.old.date];
-    else { const r=payload.new; pontoData[r.date]={entrada:r.entrada||'',saida:r.saida||'',obs:r.obs||''}; }
-    renderTable();
-  }).subscribe();
-}
-
-function onInput(dateStr, field, value) {
-  if(!pontoData[dateStr]) pontoData[dateStr]={entrada:'',saida:'',obs:''};
-  pontoData[dateStr][field]=value;
-  refreshRowCalcs(dateStr);
-  clearTimeout(saveTimers[dateStr]);
-  saveTimers[dateStr]=setTimeout(async()=>{
-    setSyncState('saving');
-    const r=pontoData[dateStr];
-    const {error}=await supa.from('ponto').upsert({date:dateStr,entrada:r?.entrada||null,saida:r?.saida||null,obs:r?.obs||null});
-    if(error){setSyncState('error');return;}
-    setSyncState('ok'); flashSaved();
-  },800);
-}
-
-function refreshRowCalcs(changed) {
-  const all=genWeekdays(START_DATE,`${new Date().getFullYear()}-12-31`);
-  const bancoMap=buildBancoMap(all);
-  const filter=document.getElementById('filterMonth').value;
-  const visible=filter==='all'?all:all.filter(d=>d.startsWith(filter));
-  visible.forEach(d=>{
-    const r=pontoData[d]||{};
-    const wEl=document.getElementById(`w-${d}`), dEl=document.getElementById(`d-${d}`), bEl=document.getElementById(`b-${d}`);
-    if(!wEl) return;
-    if(r.entrada&&r.saida){const w=parseTime(r.saida)-parseTime(r.entrada);wEl.textContent=minsToHM(w);dEl.innerHTML=diffBadge(w-DAILY_MINS);bEl.innerHTML=bancoBadge(bancoMap[d]);}
-    else{wEl.textContent='—';dEl.innerHTML=diffBadge(null);bEl.innerHTML=bancoBadge(null);}
+function setupRealtimeLimpeza(){
+  ['limpeza_comodos','limpeza_atividades','limpeza_registros'].forEach(tbl=>{
+    supa.channel(`${tbl}-rt`).on('postgres_changes',{event:'*',schema:'public',table:tbl},()=>loadLimpeza()).subscribe();
   });
-  updateCards(all,bancoMap);
 }
 
-function renderTable() {
-  const today=new Date().toISOString().slice(0,10);
-  const all=genWeekdays(START_DATE,`${new Date().getFullYear()}-12-31`);
-  const bancoMap=buildBancoMap(all);
-  const filter=document.getElementById('filterMonth').value||today.slice(0,7);
-  const rows=filter==='all'?all:all.filter(d=>d.startsWith(filter));
-  document.getElementById('pontoBody').innerHTML=rows.map(d=>{
-    const r=pontoData[d]||{}, isToday=d===today, isFuture=d>today;
-    const w=(r.entrada&&r.saida)?parseTime(r.saida)-parseTime(r.entrada):null;
-    const tCell=(f,v)=>isFuture?`<span style="color:var(--muted);font-size:.8rem">—</span>`:`<input class="time-input" type="time" value="${v}" oninput="onInput('${d}','${f}',this.value)">`;
-    const oCell=isFuture?`<span style="color:var(--muted);font-size:.8rem">—</span>`:`<input class="obs-input" type="text" value="${r.obs||''}" placeholder="—" oninput="onInput('${d}','obs',this.value)">`;
-    return `<tr class="${isToday?'today-row':''}" id="row-${d}">
-      <td><strong>${fmtDate(d)}</strong>${isToday?' 📍':''}</td>
-      <td>${dayName(d)}</td>
-      <td>${tCell('entrada',r.entrada||'')}</td>
-      <td>${tCell('saida',r.saida||'')}</td>
-      <td id="w-${d}">${w!==null?minsToHM(w):'—'}</td>
-      <td id="d-${d}">${diffBadge(w!==null?w-DAILY_MINS:null)}</td>
-      <td id="b-${d}">${bancoBadge(r.entrada&&r.saida?bancoMap[d]:null)}</td>
-      <td>${oCell}</td>
-      <td>${!isFuture?`<button class="btn btn-icon btn-outline" onclick="markAbsence('${d}')" title="Ausência">🚫</button>`:''}</td>
-    </tr>`;
-  }).join('');
-  updateCards(all,bancoMap);
-  if(rows.includes(today)) setTimeout(()=>document.getElementById('row-'+today)?.scrollIntoView({behavior:'smooth',block:'center'}),100);
-}
+function getRoomColor(comodoId){const idx=comodos.findIndex(c=>c.id===comodoId);return ROOM_COLORS[idx%ROOM_COLORS.length]||'#888';}
 
-function updateCards(all,bancoMap) {
-  const today=new Date().toISOString().slice(0,10), curMonth=today.slice(0,7);
-  const thisMo=all.filter(d=>d.startsWith(curMonth));
-  let dias=0,horas=0;
-  thisMo.forEach(d=>{const r=pontoData[d];if(r?.entrada&&r?.saida){dias++;horas+=parseTime(r.saida)-parseTime(r.entrada);}});
-  const totalBanco=bancoMap[all[all.length-1]]??0;
-  document.getElementById('cardBanco').textContent=minsToHM(totalBanco,true);
-  document.getElementById('cardBancoWrap').className=`card ${totalBanco>0?'positive':totalBanco<0?'negative':''}`;
-  document.getElementById('cardDias').textContent=`${dias}/${thisMo.length}`;
-  document.getElementById('cardHoras').textContent=minsToHM(horas);
-}
-
-async function markAbsence(d) {
-  const obs=prompt(`Motivo da ausência em ${fmtDate(d)}:`,'Falta');
-  if(obs===null) return;
-  pontoData[d]={entrada:'',saida:'',obs:obs||'Falta'};
-  setSyncState('saving');
-  await supa.from('ponto').upsert({date:d,entrada:null,saida:null,obs:obs||'Falta'});
-  setSyncState('ok'); flashSaved(); renderTable();
-}
-
-function openModal() {
-  document.getElementById('modalDate').value=new Date().toISOString().slice(0,10);
-  document.getElementById('modalEntrada').value='07:00';
-  document.getElementById('modalSaida').value='15:00';
-  document.getElementById('modalObs').value='';
-  document.getElementById('modalOverlay').classList.add('open');
-}
-function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
-async function saveModal() {
-  const d=document.getElementById('modalDate').value;
-  const ent=document.getElementById('modalEntrada').value;
-  const sai=document.getElementById('modalSaida').value;
-  const obs=document.getElementById('modalObs').value;
-  if(!d){alert('Selecione uma data.');return;}
-  pontoData[d]={entrada:ent,saida:sai,obs};
-  setSyncState('saving');
-  await supa.from('ponto').upsert({date:d,entrada:ent||null,saida:sai||null,obs:obs||null});
-  setSyncState('ok'); flashSaved(); closeModal(); renderTable();
-}
-
-function exportCSV() {
-  const all=genWeekdays(START_DATE,`${new Date().getFullYear()}-12-31`);
-  let csv='Data,Dia,Entrada,Saída,Horas Trabalhadas,Diferença,Observações\n', banco=0;
-  all.forEach(d=>{const r=pontoData[d]||{};let w='',df='';if(r.entrada&&r.saida){const n=parseTime(r.saida)-parseTime(r.entrada);banco+=n-DAILY_MINS;w=minsToHM(n);df=minsToHM(n-DAILY_MINS,true);}csv+=`${fmtDate(d)},${dayName(d)},${r.entrada||''},${r.saida||''},${w},${df},"${r.obs||''}"\n`;});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}));
-  a.download='ponto-alcyone.csv'; a.click();
-}
-
-function populateMonthFilter() {
-  const sel=document.getElementById('filterMonth'), today=new Date().toISOString().slice(0,10), yr=parseInt(START_DATE.slice(0,4));
-  sel.innerHTML='<option value="all">Todos os meses</option>';
-  for(let m=3;m<=11;m++){const key=`${yr}-${String(m+1).padStart(2,'0')}`;const opt=document.createElement('option');opt.value=key;opt.textContent=`${MONTH_LONG[m]}/${yr}`;if(key===today.slice(0,7))opt.selected=true;sel.appendChild(opt);}
-}
-
-// ════════ COMPRAS ════════
-
-async function loadCompras() {
-  try {
-    const {data,error}=await supa.from('compras').select('*').order('categoria').order('nome');
-    if(error) throw error;
-    comprasData=data||[];
-    renderCompras();
-  } catch(e) { console.error('Erro compras:',e); }
-}
-
-function setupRealtimeCompras() {
-  supa.channel('compras-rt').on('postgres_changes',{event:'*',schema:'public',table:'compras'},()=>loadCompras()).subscribe();
-}
-
-async function addItem() {
-  const nome=document.getElementById('novoItem').value.trim();
-  const cat=document.getElementById('novaCategoria').value;
-  if(!nome){document.getElementById('novoItem').focus();return;}
-  await supa.from('compras').insert({nome,categoria:cat,status:'lista_geral'});
-  document.getElementById('novoItem').value='';
-  document.getElementById('novoItem').focus();
-  loadCompras();
-}
-
-async function deleteItem(id) {
-  if(!confirm('Remover item da lista?')) return;
-  await supa.from('compras').delete().eq('id',id);
-  loadCompras();
-}
-
-async function moverParaCompras() {
-  const ids=[...document.querySelectorAll('.geral-cb:checked')].map(el=>parseInt(el.dataset.id));
-  if(!ids.length) return;
-  await supa.from('compras').update({status:'lista_compras'}).in('id',ids);
-  loadCompras(); switchComprasView('compras');
-}
-
-async function toggleComprado(id, comprado) {
-  await supa.from('compras').update({status:comprado?'lista_geral':'lista_compras_comprado'}).eq('id',id);
-  loadCompras();
-}
-
-async function limparComprados() {
-  const ids=comprasData.filter(i=>i.status==='lista_compras_comprado').map(i=>i.id);
-  if(!ids.length) return;
-  await supa.from('compras').update({status:'lista_geral'}).in('id',ids);
-  loadCompras();
-}
-
-function switchComprasView(view) {
-  document.getElementById('viewGeral').style.display  =view==='geral'  ?'block':'none';
-  document.getElementById('viewCompras').style.display=view==='compras'?'block':'none';
-  document.getElementById('btnListaGeral').classList.toggle('active',  view==='geral');
-  document.getElementById('btnListaCompras').classList.toggle('active',view==='compras');
-}
-
-function renderCompras() { renderGeralLists(); renderComprasLists(); updateCartBadge(); }
-
-function renderGeralLists() {
-  const items=comprasData.filter(i=>i.status==='lista_geral');
-  const container=document.getElementById('geralLists');
+// ── Cômodos UI ──
+function renderComodos(){
+  const container=document.getElementById('comodosList');
   container.innerHTML='';
-  CATEGORIAS.forEach(cat=>{
-    const catItems=items.filter(i=>i.categoria===cat.key);
-    const sec=document.createElement('div'); sec.className='cat-section';
-    sec.innerHTML=`<div class="cat-header"><span class="cat-title">${cat.label}</span><span class="cat-count">${catItems.length} ${catItems.length===1?'item':'itens'}</span></div>`
-      +(catItems.length===0?'<div class="empty-cat">Nenhum item nesta categoria</div>'
-        :catItems.map(item=>`<div class="item-row" id="item-row-${item.id}"><input type="checkbox" class="item-cb geral-cb" data-id="${item.id}" onchange="updateSelCount()"><span class="item-name">${item.nome}</span><button class="item-edit" onclick="startEdit(${item.id},'${item.nome.replace(/'/g,"\\'")}')">✏️</button><button class="item-del" onclick="deleteItem(${item.id})">✕</button></div>`).join(''));
-    container.appendChild(sec);
+  if(!comodos.length){container.innerHTML='<div class="empty-cat">Nenhum cômodo cadastrado</div>';return;}
+  comodos.forEach(com=>{
+    const color=getRoomColor(com.id);
+    const atvs=atividades.filter(a=>a.comodo_id===com.id);
+    const isOpen=expandedComodos.has(com.id);
+    const block=document.createElement('div');
+    block.className='comodo-block';
+    block.innerHTML=`
+      <div class="comodo-row" onclick="toggleComodo(${com.id})">
+        <div class="comodo-dot" style="background:${color}"></div>
+        <span class="comodo-nome" id="comodo-nome-${com.id}">${com.nome}</span>
+        <span class="cat-count">${atvs.length}</span>
+        <div class="comodo-actions" onclick="event.stopPropagation()">
+          <button class="comodo-btn" onclick="editComodo(${com.id},'${com.nome.replace(/'/g,"\\'")}')">✏️</button>
+          <button class="comodo-btn" onclick="deleteComodo(${com.id})">🗑️</button>
+        </div>
+        <span class="comodo-chevron ${isOpen?'open':''}">▶</span>
+      </div>
+      <div class="atividades-list" style="display:${isOpen?'block':'none'}" id="atvs-${com.id}">
+        ${renderAtvsList(com.id, atvs)}
+      </div>`;
+    container.appendChild(block);
   });
-  updateSelCount();
+  renderCalLegend();
 }
 
-function renderComprasLists() {
-  const cartItems=comprasData.filter(i=>i.status==='lista_compras'||i.status==='lista_compras_comprado');
-  const purchased=cartItems.filter(i=>i.status==='lista_compras_comprado');
-  const container=document.getElementById('comprasLists');
-  container.innerHTML='';
-  if(!cartItems.length){
-    container.innerHTML='<div class="cat-section"><div class="empty-cat" style="padding:24px;text-align:center">Nenhum item na lista. Volte à Lista Geral e selecione os produtos! 🛒</div></div>';
-    document.getElementById('cartProgressLabel').textContent='0 / 0 itens';
-    document.getElementById('cartProgressBar').style.width='0%';
-    document.getElementById('btnLimparComprados').style.display='none';
-    return;
+function renderAtvsList(comodoId, atvs){
+  return `
+    <div class="add-atv-bar">
+      <input type="text" id="novaAtv-${comodoId}" placeholder="Nova atividade…" onkeydown="if(event.key==='Enter')addAtividade(${comodoId})" />
+      <select id="novaAtvFreq-${comodoId}">
+        <option value="semanal">Semanal</option>
+        <option value="diaria">Diária</option>
+        <option value="quinzenal">Quinzenal</option>
+        <option value="mensal">Mensal</option>
+      </select>
+      <button class="btn btn-primary btn-sm" onclick="addAtividade(${comodoId})">+</button>
+    </div>
+    ${atvs.map(a=>`
+      <div class="atv-row" id="atv-row-${a.id}">
+        <span class="atv-nome">${a.nome}</span>
+        <span class="atv-freq">${FREQ_LABELS[a.frequencia]||a.frequencia}</span>
+        <button class="atv-btn edit" onclick="openEditAtv(${a.id},'${a.nome.replace(/'/g,"\\'")}','${a.frequencia}')">✏️</button>
+        <button class="atv-btn del"  onclick="deleteAtividade(${a.id})">✕</button>
+      </div>`).join('')}
+    ${atvs.length===0?'<div class="empty-cat" style="font-size:.8rem;padding:8px 4px">Nenhuma atividade</div>':''}`;
+}
+
+function toggleComodo(id){if(expandedComodos.has(id))expandedComodos.delete(id);else expandedComodos.add(id);renderComodos();}
+
+async function addComodo(){
+  const nome=document.getElementById('novoComodo').value.trim();
+  if(!nome)return;
+  await supa.from('limpeza_comodos').insert({nome});
+  document.getElementById('novoComodo').value='';
+  loadLimpeza();
+}
+
+async function deleteComodo(id){
+  if(!confirm('Remover cômodo e todas as suas atividades?'))return;
+  await supa.from('limpeza_comodos').delete().eq('id',id);
+  expandedComodos.delete(id);
+  loadLimpeza();
+}
+
+async function editComodo(id, nomeAtual){
+  const novo=prompt('Novo nome do cômodo:',nomeAtual);
+  if(!novo||novo===nomeAtual)return;
+  await supa.from('limpeza_comodos').update({nome:novo}).eq('id',id);
+  loadLimpeza();
+}
+
+async function addAtividade(comodoId){
+  const nome=document.getElementById(`novaAtv-${comodoId}`)?.value.trim();
+  const freq=document.getElementById(`novaAtvFreq-${comodoId}`)?.value||'semanal';
+  if(!nome)return;
+  await supa.from('limpeza_atividades').insert({comodo_id:comodoId,nome,frequencia:freq,data_inicio:today()});
+  loadLimpeza();
+}
+
+async function deleteAtividade(id){
+  if(!confirm('Remover atividade?'))return;
+  await supa.from('limpeza_atividades').delete().eq('id',id);
+  loadLimpeza();
+}
+
+function openEditAtv(id,nome,freq){
+  document.getElementById('editAtvId').value=id;
+  document.getElementById('editAtvNome').value=nome;
+  document.getElementById('editAtvFreq').value=freq;
+  document.getElementById('modalAtvOverlay').classList.add('open');
+}
+function closeModalAtv(){document.getElementById('modalAtvOverlay').classList.remove('open');}
+async function saveEditAtv(){
+  const id=parseInt(document.getElementById('editAtvId').value);
+  const nome=document.getElementById('editAtvNome').value.trim();
+  const freq=document.getElementById('editAtvFreq').value;
+  if(!nome)return;
+  await supa.from('limpeza_atividades').update({nome,frequencia:freq}).eq('id',id);
+  closeModalAtv();
+  loadLimpeza();
+}
+
+// ── Calendar ──
+function renderCalLegend(){
+  const leg=document.getElementById('calLegend');
+  leg.innerHTML=comodos.map(c=>`<div class="legend-item"><div class="legend-dot" style="background:${getRoomColor(c.id)}"></div>${c.nome}</div>`).join('');
+}
+
+function generateOccurrences(atv, startDate, endDate){
+  const dates=[];
+  let cur=new Date(atv.data_inicio+'T12:00:00');
+  // advance to window start
+  while(cur<startDate){
+    cur=addFreq(cur,atv.frequencia);
+    if(atv.frequencia==='diaria'&&cur<startDate)cur=new Date(startDate);
   }
-  const pct=Math.round((purchased.length/cartItems.length)*100);
-  document.getElementById('cartProgressBar').style.width=pct+'%';
-  document.getElementById('cartProgressLabel').textContent=`${purchased.length} / ${cartItems.length} itens`;
-  document.getElementById('btnLimparComprados').style.display=purchased.length>0?'':'none';
-  CATEGORIAS.forEach(cat=>{
-    const catItems=cartItems.filter(i=>i.categoria===cat.key);
-    if(!catItems.length) return;
-    const sec=document.createElement('div'); sec.className='cat-section';
-    const pend=catItems.filter(i=>i.status==='lista_compras').length;
-    sec.innerHTML=`<div class="cat-header"><span class="cat-title">${cat.label}</span><span class="cat-count">${pend} restante${pend!==1?'s':''}</span></div>`
-      +catItems.map(item=>{const c=item.status==='lista_compras_comprado';return`<div class="item-row ${c?'purchased':''}"><input type="checkbox" class="item-cb" ${c?'checked':''} onchange="toggleComprado(${item.id},${c})"><span class="item-name">${item.nome}</span></div>`;}).join('');
-    container.appendChild(sec);
+  while(cur<=endDate){
+    dates.push(cur.toISOString().slice(0,10));
+    cur=addFreq(new Date(cur),atv.frequencia);
+  }
+  return dates;
+}
+
+function addFreq(d,freq){
+  const n=new Date(d);
+  if(freq==='diaria')   n.setDate(n.getDate()+1);
+  else if(freq==='semanal')   n.setDate(n.getDate()+7);
+  else if(freq==='quinzenal') n.setDate(n.getDate()+14);
+  else if(freq==='mensal')    n.setMonth(n.getMonth()+1);
+  return n;
+}
+
+function buildCalEvents(){
+  const now=new Date();
+  const startDate=new Date(now.getFullYear(),now.getMonth()-1,1);
+  const endDate=new Date(now.getFullYear(),now.getMonth()+3,31);
+  const events=[];
+
+  atividades.forEach(atv=>{
+    const color=getRoomColor(atv.comodo_id);
+    const comodo=comodos.find(c=>c.id===atv.comodo_id);
+    const occurrences=generateOccurrences(atv,startDate,endDate);
+
+    occurrences.forEach(dataOriginal=>{
+      const reg=registros.find(r=>r.atividade_id===atv.id&&r.data_original===dataOriginal);
+      const displayDate=reg?.data_prevista||dataOriginal;
+      const concluida=reg?.concluida||false;
+      events.push({
+        id:`${atv.id}__${dataOriginal}`,
+        title:`${comodo?.nome||''} · ${atv.nome}`,
+        date:displayDate,
+        backgroundColor: concluida?'#95a5a6':color,
+        borderColor:     concluida?'#7f8c8d':color,
+        textColor:'#fff',
+        classNames: concluida?['done-event']:[],
+        extendedProps:{ atividade_id:atv.id, data_original:dataOriginal, concluida }
+      });
+    });
   });
+  return events;
 }
 
-function startEdit(id, nomeAtual) {
-  const row = document.getElementById(`item-row-${id}`);
-  if (!row) return;
-  row.innerHTML = `
-    <input class="item-edit-input" id="edit-input-${id}" type="text" value="${nomeAtual}"
-      onkeydown="if(event.key==='Enter')saveEditItem(${id});if(event.key==='Escape')renderCompras();" />
-    <button class="btn btn-success btn-sm" onclick="saveEditItem(${id})">✓</button>
-    <button class="btn btn-outline btn-sm" onclick="renderCompras()">✕</button>`;
-  document.getElementById(`edit-input-${id}`)?.focus();
+async function handleEventDrop(info){
+  const{atividade_id,data_original}=info.event.extendedProps;
+  const newDate=info.event.startStr.slice(0,10);
+  setSyncState('saving');
+  const existing=registros.find(r=>r.atividade_id===atividade_id&&r.data_original===data_original);
+  if(existing){await supa.from('limpeza_registros').update({data_prevista:newDate}).eq('id',existing.id);}
+  else{await supa.from('limpeza_registros').insert({atividade_id,data_original,data_prevista:newDate,concluida:false});}
+  setSyncState('ok');
+  loadLimpeza();
 }
 
-async function saveEditItem(id) {
-  const input = document.getElementById(`edit-input-${id}`);
-  const novoNome = input?.value.trim();
-  if (!novoNome) return;
-  await supa.from('compras').update({ nome: novoNome }).eq('id', id);
-  loadCompras();
+async function handleEventClick(info){
+  const{atividade_id,data_original,concluida}=info.event.extendedProps;
+  const newConcluida=!concluida;
+  setSyncState('saving');
+  const existing=registros.find(r=>r.atividade_id===atividade_id&&r.data_original===data_original);
+  if(existing){await supa.from('limpeza_registros').update({concluida:newConcluida}).eq('id',existing.id);}
+  else{await supa.from('limpeza_registros').insert({atividade_id,data_original,data_prevista:data_original,concluida:newConcluida});}
+  setSyncState('ok');
+  loadLimpeza();
 }
 
-function updateSelCount() {
-  const n=document.querySelectorAll('.geral-cb:checked').length;
-  document.getElementById('selCount').innerHTML=n>0?`<strong>${n}</strong> item${n!==1?'s':''} selecionado${n!==1?'s':''}`:'Nenhum item selecionado';
-  document.getElementById('btnMontar').style.display=n>0?'':'none';
+function initCalendar(){
+  const el=document.getElementById('limCalendar');
+  if(!el)return;
+  limCalendar=new FullCalendar.Calendar(el,{
+    initialView:'dayGridMonth',
+    locale:'pt-br',
+    firstDay:0,
+    headerToolbar:{left:'prev,next today',center:'title',right:'dayGridMonth,dayGridWeek'},
+    buttonText:{today:'Hoje',month:'Mês',week:'Semana'},
+    editable:true,
+    eventDurationEditable:false,
+    eventDrop:handleEventDrop,
+    eventClick:handleEventClick,
+    events:[],
+    eventDidMount(info){
+      if(info.event.extendedProps.concluida)info.el.style.opacity='.5';
+    }
+  });
+  limCalendar.render();
 }
 
-function updateCartBadge() {
-  const n=comprasData.filter(i=>i.status==='lista_compras'||i.status==='lista_compras_comprado').length;
-  const b=document.getElementById('cartBadge');
-  b.style.display=n>0?'':'none'; b.textContent=n;
+function refreshCalendar(){
+  if(!limCalendar)return;
+  limCalendar.removeAllEvents();
+  buildCalEvents().forEach(e=>limCalendar.addEvent(e));
 }
 
-// ════════ NAVIGATION ════════
-function switchTab(id, btn) {
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function switchTab(id,btn){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
+  if(id==='limpeza'&&limCalendar)setTimeout(()=>limCalendar.updateSize(),50);
 }
 
-// ════════ INIT ════════
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
 document.getElementById('headerDate').textContent=
   new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).replace(/^\w/,c=>c.toUpperCase());
 
 populateMonthFilter();
-Promise.all([loadPonto(), loadCompras()]).then(()=>{ setupRealtimePonto(); setupRealtimeCompras(); });
+initCalendar();
+Promise.all([loadPonto(),loadCompras(),loadLimpeza()]).then(()=>{
+  setupRealtimePonto();
+  setupRealtimeCompras();
+  setupRealtimeLimpeza();
+});
 </script>
 </body>
 </html>
