@@ -181,6 +181,88 @@
     .fc .fc-event.done-event { opacity: .45; text-decoration: line-through; }
     .fc-event-title { font-weight: 600; }
 
+    /* ── Alimentação ── */
+    .alim-layout { display: grid; grid-template-columns: 260px 1fr; gap: 20px; align-items: start; }
+    @media (max-width: 860px) { .alim-layout { grid-template-columns: 1fr; } }
+
+    .alim-panel { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; position: sticky; top: 76px; }
+    .alim-panel-header { background: var(--primary); color: #F4EFE8; padding: 12px 16px; font-size: .9rem; font-weight: 700; }
+
+    .alim-search { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    .alim-search input { width: 100%; border: 1.5px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: .84rem; font-family: inherit; background: var(--neutral); }
+    .alim-search input:focus { border-color: var(--accent); outline: none; }
+
+    .alim-cats { display: flex; gap: 6px; padding: 8px 12px; flex-wrap: wrap; border-bottom: 1px solid var(--border); }
+    .cat-chip { font-size: .72rem; padding: 3px 8px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--white); cursor: pointer; color: var(--muted); font-weight: 600; transition: all .15s; white-space: nowrap; }
+    .cat-chip.active { background: var(--primary); color: #F4EFE8; border-color: var(--primary); }
+
+    .alim-list { max-height: 380px; overflow-y: auto; }
+    .alim-food-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px; border-bottom: 1px solid var(--border);
+      cursor: grab; transition: background .12s;
+      user-select: none;
+    }
+    .alim-food-item:last-child { border-bottom: none; }
+    .alim-food-item:hover { background: var(--neutral); }
+    .alim-food-item.dragging { opacity: .4; }
+    .drag-handle { color: var(--muted); font-size: .8rem; flex-shrink: 0; }
+    .food-nome { flex: 1; font-size: .86rem; }
+    .food-del { background: none; border: none; cursor: pointer; font-size: .78rem; color: var(--muted); padding: 1px 4px; border-radius: 3px; }
+    .food-del:hover { color: var(--warn); }
+    .food-edit { background: none; border: none; cursor: pointer; font-size: .78rem; color: var(--muted); padding: 1px 4px; border-radius: 3px; }
+    .food-edit:hover { color: var(--accent-dark); }
+
+    .add-food-bar { padding: 10px 12px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 7px; }
+    .add-food-bar input { width: 100%; border: 1.5px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: .84rem; font-family: inherit; }
+    .add-food-bar input:focus { border-color: var(--accent); outline: none; }
+    .add-food-bar select { width: 100%; border: 1.5px solid var(--border); border-radius: 6px; padding: 6px 10px; font-size: .82rem; background: var(--white); }
+
+    /* Weekly calendar */
+    .week-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+    .week-label { font-size: 1rem; font-weight: 700; color: var(--primary); }
+    .week-nav-btns { display: flex; gap: 8px; align-items: center; }
+
+    .cardapio-grid { overflow-x: auto; }
+    .cardapio-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+    .cardapio-table th {
+      background: var(--primary); color: #F4EFE8;
+      padding: 10px 8px; font-size: .8rem; font-weight: 700;
+      text-align: center; white-space: nowrap;
+    }
+    .cardapio-table th.today-col { background: var(--accent-dark); }
+    .cardapio-table td {
+      padding: 6px; vertical-align: top;
+      border: 1px solid var(--border); background: var(--white);
+      min-height: 64px; min-width: 90px;
+    }
+    .cardapio-table td.today-col { background: #FAF5EE; }
+    .meal-label-cell {
+      background: var(--neutral-dark) !important;
+      padding: 8px 10px !important; white-space: nowrap;
+      font-size: .8rem; font-weight: 700; color: var(--primary);
+      min-width: 80px;
+    }
+    .meal-slot {
+      min-height: 56px; border-radius: 6px; padding: 4px;
+      transition: background .15s;
+      display: flex; flex-direction: column; gap: 3px;
+    }
+    .meal-slot.drag-over { background: #EDE3D8; border: 2px dashed var(--accent); }
+
+    .meal-chip {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 4px; background: var(--neutral-dark);
+      border-radius: 5px; padding: 3px 6px;
+      font-size: .76rem; font-weight: 600; color: var(--primary);
+      cursor: grab;
+    }
+    .meal-chip:hover { background: var(--border); }
+    .chip-del { background: none; border: none; cursor: pointer; font-size: .7rem; color: var(--muted); padding: 0 2px; flex-shrink: 0; line-height: 1; }
+    .chip-del:hover { color: var(--warn); }
+
+    .empty-week { text-align: center; padding: 40px 20px; color: var(--muted); font-size: .9rem; }
+
     /* ── Coming soon ── */
     .coming-soon { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; text-align: center; }
     .coming-soon .icon { font-size: 3rem; margin-bottom: 16px; }
@@ -232,7 +314,7 @@
 <nav class="tab-bar">
   <button class="tab-btn active" onclick="switchTab('ponto', this)">👩‍💼 Controle de Ponto</button>
   <button class="tab-btn" onclick="switchTab('limpeza', this)">🧹 Limpeza</button>
-  <button class="tab-btn" onclick="switchTab('alimentacao', this)">🍽️ Alimentação <span class="tag-coming">Em breve</span></button>
+  <button class="tab-btn" onclick="switchTab('alimentacao', this)">🍽️ Alimentação</button>
   <button class="tab-btn" onclick="switchTab('compras', this)">🛒 Compras</button>
   <button class="tab-btn" onclick="switchTab('outros', this)">📋 Outros <span class="tag-coming">Em breve</span></button>
 </nav>
@@ -355,9 +437,54 @@
   </div>
 </div>
 
-<!-- ══════════════ OTHER TABS ══════════════ -->
+<!-- ══════════════ ALIMENTAÇÃO ══════════════ -->
 <div class="tab-content" id="tab-alimentacao">
-  <div class="coming-soon"><div class="icon">🍽️</div><h2>Alimentação</h2><p>Cardápios, planos alimentares e controle de estoque.</p></div>
+  <div class="alim-layout">
+
+    <!-- Left: Food repository -->
+    <div class="alim-panel">
+      <div class="alim-panel-header">🥗 Repositório de Alimentos</div>
+      <div class="alim-search">
+        <input type="text" id="alimSearchInput" placeholder="Buscar alimento…" oninput="alimSearch=this.value;renderFoodRepository()" />
+      </div>
+      <div class="alim-cats" id="alimCats"></div>
+      <div class="alim-list" id="alimList"></div>
+      <div class="add-food-bar">
+        <input type="text" id="novoAlimento" placeholder="Nome do alimento…" onkeydown="if(event.key==='Enter')addAlimento()" />
+        <select id="novoAlimentoCat">
+          <option value="frutas">🍎 Frutas</option>
+          <option value="proteinas">🥩 Proteínas</option>
+          <option value="carboidratos">🍚 Carboidratos</option>
+          <option value="legumes">🥦 Legumes e Verduras</option>
+          <option value="laticinios">🧀 Laticínios</option>
+          <option value="bebidas">🥤 Bebidas</option>
+          <option value="outros">📦 Outros</option>
+        </select>
+        <button class="btn btn-primary btn-sm" onclick="addAlimento()">+ Adicionar</button>
+      </div>
+    </div>
+
+    <!-- Right: Weekly calendar -->
+    <div>
+      <div class="week-nav">
+        <span class="week-label" id="weekLabel">—</span>
+        <div class="week-nav-btns">
+          <button class="btn btn-outline btn-sm" onclick="navigateWeek(-1)">‹ Anterior</button>
+          <button class="btn btn-outline btn-sm" onclick="goToTodayWeek()">Hoje</button>
+          <button class="btn btn-outline btn-sm" onclick="navigateWeek(1)">Próxima ›</button>
+        </div>
+      </div>
+      <div class="lim-cal-wrap" style="padding:0;overflow:hidden;">
+        <div class="cardapio-grid">
+          <table class="cardapio-table" id="cardapioTable">
+            <thead id="cardapioHead"></thead>
+            <tbody id="cardapioBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 <div class="tab-content" id="tab-outros">
   <div class="coming-soon"><div class="icon">📋</div><h2>Outros</h2><p>Espaço para outras áreas da casa.</p></div>
@@ -764,6 +891,232 @@ function refreshCalendar(){
 }
 
 // ══════════════════════════════════════════
+// ALIMENTAÇÃO
+// ══════════════════════════════════════════
+let alimentosData = [];
+let cardapioData  = [];
+let alimWeekStart = null;
+let alimFilter    = 'todas';
+let alimSearch    = '';
+
+const ALIM_CATS = [
+  { key:'todas',        label:'🍽️ Todas' },
+  { key:'frutas',       label:'🍎 Frutas' },
+  { key:'proteinas',    label:'🥩 Proteínas' },
+  { key:'carboidratos', label:'🍚 Carboidratos' },
+  { key:'legumes',      label:'🥦 Legumes' },
+  { key:'laticinios',   label:'🧀 Laticínios' },
+  { key:'bebidas',      label:'🥤 Bebidas' },
+  { key:'outros',       label:'📦 Outros' },
+];
+
+const REFEICOES = [
+  { key:'cafe',   label:'☀️ Café da manhã' },
+  { key:'almoco', label:'🍽️ Almoço' },
+  { key:'lanche', label:'🍪 Lanche' },
+  { key:'jantar', label:'🌙 Jantar' },
+];
+
+const WEEK_DAYS_PT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const MONTH_SHORT  = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+function getMonday(d){
+  const dt=new Date(d); dt.setHours(12,0,0,0);
+  const day=dt.getDay();
+  dt.setDate(dt.getDate()+(day===0?-6:1-day));
+  return dt;
+}
+function getWeekDates(monday){
+  return Array.from({length:7},(_,i)=>{const d=new Date(monday);d.setDate(d.getDate()+i);return d;});
+}
+function formatWeekLabel(monday){
+  const days=getWeekDates(monday);
+  const s=days[0],e=days[6];
+  if(s.getMonth()===e.getMonth())
+    return`${s.getDate()} – ${e.getDate()} de ${MONTH_LONG[s.getMonth()]} ${s.getFullYear()}`;
+  return`${s.getDate()} ${MONTH_SHORT[s.getMonth()]} – ${e.getDate()} ${MONTH_SHORT[e.getMonth()]} ${e.getFullYear()}`;
+}
+
+async function loadAlimentacao(){
+  try{
+    const[ra,rc]=await Promise.all([
+      supa.from('alimentacao_alimentos').select('*').order('nome'),
+      supa.from('alimentacao_cardapio').select('*')
+    ]);
+    alimentosData=ra.data||[];
+    cardapioData =rc.data||[];
+    renderFoodRepository();
+    renderWeeklyCalendar();
+  }catch(e){console.error('Erro alimentação:',e);}
+}
+
+function setupRealtimeAlimentacao(){
+  ['alimentacao_alimentos','alimentacao_cardapio'].forEach(tbl=>{
+    supa.channel(`${tbl}-rt`).on('postgres_changes',{event:'*',schema:'public',table:tbl},()=>loadAlimentacao()).subscribe();
+  });
+}
+
+// ── Food Repository ──
+function renderCategoryChips(){
+  const c=document.getElementById('alimCats');
+  if(!c)return;
+  c.innerHTML=ALIM_CATS.map(cat=>
+    `<span class="cat-chip ${alimFilter===cat.key?'active':''}" onclick="alimFilter='${cat.key}';renderFoodRepository()">${cat.label}</span>`
+  ).join('');
+}
+
+function renderFoodRepository(){
+  renderCategoryChips();
+  const container=document.getElementById('alimList');
+  if(!container)return;
+  const q=alimSearch.trim().toLowerCase();
+  let items=alimentosData;
+  if(alimFilter!=='todas')items=items.filter(a=>a.categoria===alimFilter);
+  if(q)items=items.filter(a=>a.nome.toLowerCase().includes(q));
+  if(!items.length){container.innerHTML='<div class="empty-cat" style="padding:14px 12px">Nenhum alimento encontrado</div>';return;}
+  container.innerHTML=items.map(a=>`
+    <div class="alim-food-item" draggable="true" ondragstart="onFoodDragStart(event,${a.id},'${a.nome.replace(/'/g,"\\'").replace(/"/g,"&quot;")}')">
+      <span class="drag-handle">⠿</span>
+      <span class="food-nome" id="food-nome-${a.id}">${a.nome}</span>
+      <button class="food-edit" onclick="startEditAlimento(${a.id},'${a.nome.replace(/'/g,"\\'").replace(/"/g,"&quot;")}')">✏️</button>
+      <button class="food-del" onclick="deleteAlimento(${a.id})">✕</button>
+    </div>`).join('');
+}
+
+async function addAlimento(){
+  const nome=document.getElementById('novoAlimento')?.value.trim();
+  const cat =document.getElementById('novoAlimentoCat')?.value||'outros';
+  if(!nome){document.getElementById('novoAlimento')?.focus();return;}
+  await supa.from('alimentacao_alimentos').insert({nome,categoria:cat});
+  document.getElementById('novoAlimento').value='';
+  document.getElementById('novoAlimento').focus();
+  loadAlimentacao();
+}
+
+async function deleteAlimento(id){
+  if(!confirm('Remover alimento?'))return;
+  await supa.from('alimentacao_alimentos').delete().eq('id',id);
+  loadAlimentacao();
+}
+
+function startEditAlimento(id,nomeAtual){
+  const el=document.getElementById(`food-nome-${id}`);
+  if(!el)return;
+  const parent=el.parentElement;
+  parent.innerHTML=`
+    <input class="item-edit-input" id="alim-edit-${id}" type="text" value="${nomeAtual}"
+      onkeydown="if(event.key==='Enter')saveEditAlimento(${id});if(event.key==='Escape')renderFoodRepository();" />
+    <button class="btn btn-success btn-sm" onclick="saveEditAlimento(${id})">✓</button>
+    <button class="btn btn-outline btn-sm" onclick="renderFoodRepository()">✕</button>`;
+  document.getElementById(`alim-edit-${id}`)?.focus();
+}
+
+async function saveEditAlimento(id){
+  const novo=document.getElementById(`alim-edit-${id}`)?.value.trim();
+  if(!novo)return;
+  await supa.from('alimentacao_alimentos').update({nome:novo}).eq('id',id);
+  loadAlimentacao();
+}
+
+// ── Drag & Drop ──
+let dragFoodId=null, dragFoodNome=null;
+
+function onFoodDragStart(event,id,nome){
+  dragFoodId=id; dragFoodNome=nome;
+  event.dataTransfer.effectAllowed='copy';
+  event.dataTransfer.setData('text/plain',nome);
+  event.currentTarget.classList.add('dragging');
+  setTimeout(()=>event.currentTarget?.classList.remove('dragging'),0);
+}
+
+function onSlotDragOver(event){
+  event.preventDefault();
+  event.dataTransfer.dropEffect='copy';
+  event.currentTarget.classList.add('drag-over');
+}
+
+function onSlotDragLeave(event){
+  event.currentTarget.classList.remove('drag-over');
+}
+
+async function onSlotDrop(event,dataStr,refeicao){
+  event.preventDefault();
+  event.currentTarget.classList.remove('drag-over');
+  const nome=dragFoodNome||event.dataTransfer.getData('text/plain');
+  if(!nome)return;
+  setSyncState('saving');
+  await supa.from('alimentacao_cardapio').insert({
+    data:dataStr, refeicao, alimento_nome:nome, alimento_id:dragFoodId||null
+  });
+  dragFoodId=null; dragFoodNome=null;
+  setSyncState('ok');
+  loadAlimentacao();
+}
+
+async function deleteMealItem(id){
+  setSyncState('saving');
+  await supa.from('alimentacao_cardapio').delete().eq('id',id);
+  setSyncState('ok');
+  loadAlimentacao();
+}
+
+// ── Weekly Calendar ──
+function renderWeeklyCalendar(){
+  if(!alimWeekStart)alimWeekStart=getMonday(new Date());
+  const days=getWeekDates(alimWeekStart);
+  const t=today();
+
+  const lbl=document.getElementById('weekLabel');
+  if(lbl)lbl.textContent=formatWeekLabel(alimWeekStart);
+
+  const thead=document.getElementById('cardapioHead');
+  if(thead){
+    thead.innerHTML='<tr><th style="min-width:100px">Refeição</th>'+
+      days.map(d=>{
+        const ds=d.toISOString().slice(0,10);
+        const isToday=ds===t;
+        return`<th class="${isToday?'today-col':''}">${WEEK_DAYS_PT[d.getDay()]}<br><span style="font-size:.85em;font-weight:400">${d.getDate()}</span></th>`;
+      }).join('')+'</tr>';
+  }
+
+  const tbody=document.getElementById('cardapioBody');
+  if(!tbody)return;
+  tbody.innerHTML=REFEICOES.map(ref=>{
+    const cells=days.map(d=>{
+      const ds=d.toISOString().slice(0,10);
+      const isToday=ds===t;
+      const items=cardapioData.filter(c=>c.data===ds&&c.refeicao===ref.key);
+      const chips=items.map(item=>
+        `<div class="meal-chip">
+          <span>${item.alimento_nome}</span>
+          <button class="chip-del" onclick="deleteMealItem(${item.id})">✕</button>
+        </div>`).join('');
+      return`<td class="${isToday?'today-col':''}">
+        <div class="meal-slot"
+          ondragover="onSlotDragOver(event)"
+          ondragleave="onSlotDragLeave(event)"
+          ondrop="onSlotDrop(event,'${ds}','${ref.key}')">
+          ${chips}
+        </div>
+      </td>`;
+    }).join('');
+    return`<tr><td class="meal-label-cell">${ref.label}</td>${cells}</tr>`;
+  }).join('');
+}
+
+function navigateWeek(delta){
+  if(!alimWeekStart)alimWeekStart=getMonday(new Date());
+  alimWeekStart=new Date(alimWeekStart);
+  alimWeekStart.setDate(alimWeekStart.getDate()+delta*7);
+  renderWeeklyCalendar();
+}
+
+function goToTodayWeek(){
+  alimWeekStart=getMonday(new Date());
+  renderWeeklyCalendar();
+}
+
+// ══════════════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════════════
 function switchTab(id,btn){
@@ -772,6 +1125,7 @@ function switchTab(id,btn){
   document.getElementById('tab-'+id).classList.add('active');
   btn.classList.add('active');
   if(id==='limpeza'&&limCalendar)setTimeout(()=>limCalendar.updateSize(),50);
+  if(id==='alimentacao'){renderFoodRepository();renderWeeklyCalendar();}
 }
 
 // ══════════════════════════════════════════
@@ -782,10 +1136,11 @@ document.getElementById('headerDate').textContent=
 
 populateMonthFilter();
 initCalendar();
-Promise.all([loadPonto(),loadCompras(),loadLimpeza()]).then(()=>{
+Promise.all([loadPonto(),loadCompras(),loadLimpeza(),loadAlimentacao()]).then(()=>{
   setupRealtimePonto();
   setupRealtimeCompras();
   setupRealtimeLimpeza();
+  setupRealtimeAlimentacao();
 });
 </script>
 </body>
