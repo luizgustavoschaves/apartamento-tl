@@ -68,7 +68,7 @@
     tbody td { padding: 9px 14px; text-align: center; }
     tbody td:first-child { text-align: left; }
     tbody tr:last-child { border-bottom: none; }
-    .time-input { border: 1.5px solid var(--border); border-radius: 5px; padding: 4px 8px; width: 72px; font-size: .84rem; text-align: center; font-family: inherit; }
+    .time-input { border: 1.5px solid var(--border); border-radius: 5px; padding: 4px 8px; width: 96px; font-size: .84rem; text-align: center; font-family: inherit; }
     .time-input:focus { border-color: var(--primary-light); outline: none; }
     .obs-input { border: 1.5px solid var(--border); border-radius: 5px; padding: 4px 8px; width: 140px; font-size: .82rem; font-family: inherit; }
     .obs-input:focus { border-color: var(--primary-light); outline: none; }
@@ -99,8 +99,11 @@
     .item-row.purchased .item-name { text-decoration: line-through; }
     .item-cb { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); flex-shrink: 0; }
     .item-name { flex: 1; font-size: .9rem; }
-    .item-del { background: none; border: none; cursor: pointer; font-size: .9rem; color: var(--muted); padding: 2px 6px; border-radius: 4px; }
-    .item-del:hover { color: var(--warn); }
+    .item-del  { background: none; border: none; cursor: pointer; font-size: .9rem; color: var(--muted); padding: 2px 6px; border-radius: 4px; }
+    .item-del:hover  { color: var(--warn); }
+    .item-edit { background: none; border: none; cursor: pointer; font-size: .9rem; color: var(--muted); padding: 2px 6px; border-radius: 4px; }
+    .item-edit:hover { color: var(--primary-light); }
+    .item-edit-input { flex: 1; border: 1.5px solid var(--primary-light); border-radius: 5px; padding: 3px 8px; font-size: .9rem; font-family: inherit; outline: none; }
     .compras-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
     .sel-count { font-size: .88rem; color: var(--muted); font-weight: 500; }
     .sel-count strong { color: var(--primary); }
@@ -563,7 +566,7 @@ function renderGeralLists() {
     const sec=document.createElement('div'); sec.className='cat-section';
     sec.innerHTML=`<div class="cat-header"><span class="cat-title">${cat.label}</span><span class="cat-count">${catItems.length} ${catItems.length===1?'item':'itens'}</span></div>`
       +(catItems.length===0?'<div class="empty-cat">Nenhum item nesta categoria</div>'
-        :catItems.map(item=>`<div class="item-row"><input type="checkbox" class="item-cb geral-cb" data-id="${item.id}" onchange="updateSelCount()"><span class="item-name">${item.nome}</span><button class="item-del" onclick="deleteItem(${item.id})">✕</button></div>`).join(''));
+        :catItems.map(item=>`<div class="item-row" id="item-row-${item.id}"><input type="checkbox" class="item-cb geral-cb" data-id="${item.id}" onchange="updateSelCount()"><span class="item-name">${item.nome}</span><button class="item-edit" onclick="startEdit(${item.id},'${item.nome.replace(/'/g,"\\'")}')">✏️</button><button class="item-del" onclick="deleteItem(${item.id})">✕</button></div>`).join(''));
     container.appendChild(sec);
   });
   updateSelCount();
@@ -594,6 +597,25 @@ function renderComprasLists() {
       +catItems.map(item=>{const c=item.status==='lista_compras_comprado';return`<div class="item-row ${c?'purchased':''}"><input type="checkbox" class="item-cb" ${c?'checked':''} onchange="toggleComprado(${item.id},${c})"><span class="item-name">${item.nome}</span></div>`;}).join('');
     container.appendChild(sec);
   });
+}
+
+function startEdit(id, nomeAtual) {
+  const row = document.getElementById(`item-row-${id}`);
+  if (!row) return;
+  row.innerHTML = `
+    <input class="item-edit-input" id="edit-input-${id}" type="text" value="${nomeAtual}"
+      onkeydown="if(event.key==='Enter')saveEditItem(${id});if(event.key==='Escape')renderCompras();" />
+    <button class="btn btn-success btn-sm" onclick="saveEditItem(${id})">✓</button>
+    <button class="btn btn-outline btn-sm" onclick="renderCompras()">✕</button>`;
+  document.getElementById(`edit-input-${id}`)?.focus();
+}
+
+async function saveEditItem(id) {
+  const input = document.getElementById(`edit-input-${id}`);
+  const novoNome = input?.value.trim();
+  if (!novoNome) return;
+  await supa.from('compras').update({ nome: novoNome }).eq('id', id);
+  loadCompras();
 }
 
 function updateSelCount() {
