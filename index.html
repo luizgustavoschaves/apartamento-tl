@@ -8,11 +8,18 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --primary: #1F4E79; --primary-light: #2E75B6;
-      --accent: #2ECC71; --warn: #E74C3C;
-      --neutral: #F0F4F8; --border: #D1D9E0;
-      --text: #1A2B3C; --muted: #6B7A8A; --white: #FFFFFF;
-      --shadow: 0 2px 12px rgba(31,78,121,0.10); --radius: 10px;
+      --primary: #3A2418;       /* madeira escura da mesa e rack */
+      --primary-light: #6B4C3B; /* madeira média */
+      --accent: #B59A7A;        /* veios dourados do mármore */
+      --accent-dark: #8C7355;   /* dourado escuro */
+      --warn: #B5614A;          /* terracota suave */
+      --neutral: #F4F1EC;       /* branco quente das paredes */
+      --neutral-dark: #EAE5DE;  /* bege claro do piso */
+      --border: #DDD7CE;        /* bege médio */
+      --text: #2C2825;          /* carvão quente */
+      --muted: #9C8E84;         /* cinza quente */
+      --white: #FDFAF7;         /* branco marfim */
+      --shadow: 0 2px 14px rgba(58,36,24,0.10); --radius: 10px;
     }
     body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--neutral); color: var(--text); min-height: 100vh; }
 
@@ -69,8 +76,8 @@
     thead th { background: var(--primary); color: #fff; padding: 11px 14px; text-align: center; font-weight: 600; font-size: .78rem; white-space: nowrap; }
     thead th:first-child { text-align: left; }
     tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; }
-    tbody tr:hover { background: #F5F9FF; }
-    tbody tr.today-row { background: #EBF5FF; }
+    tbody tr:hover { background: #F0EBE4; }
+    tbody tr.today-row { background: #EDE3D8; }
     tbody tr.today-row td { font-weight: 600; }
     tbody td { padding: 9px 14px; text-align: center; }
     tbody td:first-child { text-align: left; }
@@ -80,10 +87,10 @@
     .obs-input { border: 1.5px solid var(--border); border-radius: 5px; padding: 4px 8px; width: 140px; font-size: .82rem; font-family: inherit; }
     .obs-input:focus { border-color: var(--primary-light); outline: none; }
     .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: .75rem; font-weight: 700; }
-    .badge-plus  { background: #D5F5E3; color: #1E8449; }
-    .badge-minus { background: #FADBD8; color: #C0392B; }
-    .badge-zero  { background: #EBF5FB; color: #2471A3; }
-    .table-footer { padding: 8px 14px; background: #F0F7FF; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+    .badge-plus  { background: #E8DDD0; color: #5C3D25; }
+    .badge-minus { background: #F0DDD8; color: #8B3A28; }
+    .badge-zero  { background: #EDE9E3; color: #7A6A5F; }
+    .table-footer { padding: 8px 14px; background: var(--neutral-dark); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
     .save-status { font-size: .8rem; color: var(--accent); font-weight: 600; opacity: 0; transition: opacity .4s; }
     .save-status.show { opacity: 1; }
 
@@ -116,7 +123,7 @@
     .sel-count strong { color: var(--primary); }
     .cart-progress { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 16px; }
     .progress-bar-wrap { flex: 1; background: var(--border); border-radius: 10px; height: 8px; overflow: hidden; }
-    .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 10px; transition: width .4s; }
+    .progress-bar-fill { height: 100%; background: var(--accent-dark); border-radius: 10px; transition: width .4s; }
     .progress-label { font-size: .88rem; font-weight: 700; color: var(--primary); white-space: nowrap; }
     .empty-cat { padding: 14px 18px; color: var(--muted); font-size: .85rem; font-style: italic; }
 
@@ -165,9 +172,11 @@
 
     /* FullCalendar overrides */
     .fc .fc-toolbar-title { font-size: 1rem !important; font-weight: 700; color: var(--primary); }
-    .fc .fc-button { background: var(--primary) !important; border-color: var(--primary) !important; font-size: .8rem !important; }
+    .fc .fc-button { background: var(--primary) !important; border-color: var(--primary) !important; font-size: .8rem !important; color: #F4EFE8 !important; }
     .fc .fc-button:hover { opacity: .85; }
     .fc .fc-button-active { background: var(--primary-light) !important; border-color: var(--primary-light) !important; }
+    .fc-theme-standard td, .fc-theme-standard th { border-color: var(--border) !important; }
+    .fc-theme-standard .fc-scrollgrid { border-color: var(--border) !important; }
     .fc .fc-daygrid-event { border-radius: 4px !important; font-size: .75rem !important; cursor: grab; }
     .fc .fc-event.done-event { opacity: .45; text-decoration: line-through; }
     .fc-event-title { font-weight: 600; }
@@ -446,7 +455,7 @@ let expandedComodos = new Set();
 const parseTime = s => { if(!s)return null; const[h,m]=s.split(':').map(Number); return isNaN(h)?null:h*60+m; };
 const minsToHM  = (n,sign=false) => { if(n===null||n===undefined)return'—'; const s=n<0?'-':(sign&&n>0?'+':''); const a=Math.abs(n); return`${s}${Math.floor(a/60)}:${String(a%60).padStart(2,'0')}`; };
 const diffBadge = n => { if(n===null)return'<span style="color:var(--muted)">—</span>'; if(n>0)return`<span class="badge badge-plus">${minsToHM(n,true)}</span>`; if(n<0)return`<span class="badge badge-minus">${minsToHM(n,true)}</span>`; return'<span class="badge badge-zero">0:00</span>'; };
-const bancoBadge= n => { if(n===null)return'<span style="color:var(--muted)">—</span>'; const c=n>0?'#1E8449':n<0?'#C0392B':'#2471A3'; return`<span style="color:${c};font-weight:700">${minsToHM(n,true)}</span>`; };
+const bancoBadge= n => { if(n===null)return'<span style="color:var(--muted)">—</span>'; const c=n>0?'#5C3D25':n<0?'#8B3A28':'#7A6A5F'; return`<span style="color:${c};font-weight:700">${minsToHM(n,true)}</span>`; };
 const fmtDate   = s => { const[y,m,d]=s.split('-'); return`${d}/${m}/${y}`; };
 const dayName   = s => DAY_NAMES[new Date(s+'T12:00:00').getDay()];
 const today     = () => new Date().toISOString().slice(0,10);
