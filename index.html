@@ -104,6 +104,14 @@
     .add-item-bar select { border: 1.5px solid var(--border); border-radius: 6px; padding: 8px 12px; font-size: .88rem; background: var(--white); }
     .cat-section { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 14px; overflow: hidden; }
     .cat-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: var(--neutral); border-bottom: 1px solid var(--border); }
+    .cat-header.collapsible { cursor: pointer; user-select: none; transition: background .15s; }
+    .cat-header.collapsible:hover { background: var(--neutral-dark); }
+    .cat-section.collapsed .cat-header { border-bottom: none; }
+    .cat-header-right { display: flex; align-items: center; gap: 10px; }
+    .cat-chevron { font-size: .7rem; color: var(--muted); transition: transform .2s; }
+    .cat-chevron.open { transform: rotate(90deg); }
+    .cat-body { }
+    .cat-body.collapsed { display: none; }
     .cat-title { font-size: .92rem; font-weight: 700; color: var(--primary); }
     .cat-count { font-size: .75rem; background: var(--border); color: var(--muted); padding: 2px 8px; border-radius: 10px; font-weight: 600; }
     .item-row { display: flex; align-items: center; gap: 12px; padding: 10px 18px; border-bottom: 1px solid var(--border); transition: background .12s; }
@@ -575,6 +583,7 @@ let registros   = [];
 let limCalendar = null;
 let saveTimers  = {};
 let expandedComodos = new Set();
+let collapsedGeralCats = (()=>{try{return new Set(JSON.parse(localStorage.getItem('collapsedGeralCats')||'[]'));}catch(e){return new Set();}})();
 
 // ══════════════════════════════════════════
 // HELPERS
@@ -638,7 +647,9 @@ function switchComprasView(view){document.getElementById('viewGeral').style.disp
 
 function renderCompras(){renderGeralLists();renderComprasLists();updateCartBadge();}
 
-function renderGeralLists(){const items=comprasData.filter(i=>i.status==='lista_geral');const container=document.getElementById('geralLists');container.innerHTML='';CATEGORIAS.forEach(cat=>{const catItems=items.filter(i=>i.categoria===cat.key);const sec=document.createElement('div');sec.className='cat-section';sec.innerHTML=`<div class="cat-header"><span class="cat-title">${cat.label}</span><span class="cat-count">${catItems.length} ${catItems.length===1?'item':'itens'}</span></div>`+(catItems.length===0?'<div class="empty-cat">Nenhum item nesta categoria</div>':catItems.map(item=>`<div class="item-row" id="item-row-${item.id}"><input type="checkbox" class="item-cb geral-cb" data-id="${item.id}" onchange="updateSelCount()"><span class="item-name">${item.nome}</span><button class="item-edit" onclick="startEdit(${item.id},'${item.nome.replace(/'/g,"\\'")}')">✏️</button><button class="item-del" onclick="deleteItem(${item.id})">✕</button></div>`).join(''));container.appendChild(sec);});updateSelCount();}
+function renderGeralLists(){const items=comprasData.filter(i=>i.status==='lista_geral');const container=document.getElementById('geralLists');container.innerHTML='';CATEGORIAS.forEach(cat=>{const catItems=items.filter(i=>i.categoria===cat.key);const isCollapsed=collapsedGeralCats.has(cat.key);const sec=document.createElement('div');sec.className='cat-section'+(isCollapsed?' collapsed':'');sec.innerHTML=`<div class="cat-header collapsible" onclick="toggleGeralCat('${cat.key}')"><span class="cat-title">${cat.label}</span><div class="cat-header-right"><span class="cat-count">${catItems.length} ${catItems.length===1?'item':'itens'}</span><span class="cat-chevron ${isCollapsed?'':'open'}">▶</span></div></div><div class="cat-body ${isCollapsed?'collapsed':''}">`+(catItems.length===0?'<div class="empty-cat">Nenhum item nesta categoria</div>':catItems.map(item=>`<div class="item-row" id="item-row-${item.id}"><input type="checkbox" class="item-cb geral-cb" data-id="${item.id}" onchange="updateSelCount()"><span class="item-name">${item.nome}</span><button class="item-edit" onclick="startEdit(${item.id},'${item.nome.replace(/'/g,"\\'")}')">✏️</button><button class="item-del" onclick="deleteItem(${item.id})">✕</button></div>`).join(''))+'</div>';container.appendChild(sec);});updateSelCount();}
+
+function toggleGeralCat(key){if(collapsedGeralCats.has(key))collapsedGeralCats.delete(key);else collapsedGeralCats.add(key);try{localStorage.setItem('collapsedGeralCats',JSON.stringify([...collapsedGeralCats]));}catch(e){}renderGeralLists();}
 
 function renderComprasLists(){const cartItems=comprasData.filter(i=>i.status==='lista_compras'||i.status==='lista_compras_comprado');const purchased=cartItems.filter(i=>i.status==='lista_compras_comprado');const container=document.getElementById('comprasLists');container.innerHTML='';if(!cartItems.length){container.innerHTML='<div class="cat-section"><div class="empty-cat" style="padding:24px;text-align:center">Nenhum item na lista. Volte à Lista Geral e selecione os produtos! 🛒</div></div>';document.getElementById('cartProgressLabel').textContent='0 / 0 itens';document.getElementById('cartProgressBar').style.width='0%';document.getElementById('btnLimparComprados').style.display='none';return;}const pct=Math.round((purchased.length/cartItems.length)*100);document.getElementById('cartProgressBar').style.width=pct+'%';document.getElementById('cartProgressLabel').textContent=`${purchased.length} / ${cartItems.length} itens`;document.getElementById('btnLimparComprados').style.display=purchased.length>0?'':'none';CATEGORIAS.forEach(cat=>{const catItems=cartItems.filter(i=>i.categoria===cat.key);if(!catItems.length)return;const sec=document.createElement('div');sec.className='cat-section';const pend=catItems.filter(i=>i.status==='lista_compras').length;sec.innerHTML=`<div class="cat-header"><span class="cat-title">${cat.label}</span><span class="cat-count">${pend} restante${pend!==1?'s':''}</span></div>`+catItems.map(item=>{const c=item.status==='lista_compras_comprado';return`<div class="item-row ${c?'purchased':''}"><input type="checkbox" class="item-cb" ${c?'checked':''} onchange="toggleComprado(${item.id},${c})"><span class="item-name">${item.nome}</span></div>`;}).join('');container.appendChild(sec);});}
 
