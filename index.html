@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Apartamento TL 🏠</title>
+  <title>Apartamento TL</title>
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -839,13 +839,13 @@ function buildCalEvents(){
       const concluida=reg?.concluida||false;
       events.push({
         id:`${atv.id}__${dataOriginal}`,
-        title:`${comodo?.nome||''} · ${atv.nome}`,
+        title:atv.nome,
         date:displayDate,
         backgroundColor: concluida?'#95a5a6':color,
         borderColor:     concluida?'#7f8c8d':color,
         textColor:'#fff',
         classNames: concluida?['done-event']:[],
-        extendedProps:{ atividade_id:atv.id, data_original:dataOriginal, concluida }
+        extendedProps:{ atividade_id:atv.id, data_original:dataOriginal, concluida, comodo_nome:comodo?.nome||'' }
       });
     });
   });
@@ -890,6 +890,8 @@ function initCalendar(){
     events:[],
     eventDidMount(info){
       if(info.event.extendedProps.concluida)info.el.style.opacity='.5';
+      const{comodo_nome,concluida}=info.event.extendedProps;
+      info.el.title=`${comodo_nome ? comodo_nome+' · ' : ''}${info.event.title}${concluida?' ✓ Concluída':''}`;
     }
   });
   limCalendar.render();
